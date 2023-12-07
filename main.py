@@ -1,9 +1,25 @@
 import openpyxl
 from tkinter import *
 from tkinter import messagebox
-from openpyxl import Workbook
-# ---------------------------- PASSWORD GENERATOR ------------------------------- #
+import random
+import string
 
+
+# ---------------------------- PASSWORD GENERATOR ------------------------------- #
+def generate_password(length=12, include_uppercase=True, include_digits=True, include_special_chars=True):
+    characters = string.ascii_lowercase
+    if include_uppercase:
+        characters += string.ascii_uppercase
+    if include_digits:
+        characters += string.digits
+    if include_special_chars:
+        characters += string.punctuation
+
+    if length < 1:
+        raise ValueError("Password length must be at least 1")
+
+    password = ''.join(random.choice(characters) for i in range(length))
+    password_entry.insert(0, password)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -13,25 +29,25 @@ window.config(padx=50,pady=20)
 
 canvas = Canvas(window, width = 200, height = 200)
 logo_img = PhotoImage(file="logo.png")
-
-def generate_password():
-    pass
+    
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
     # Get the user input from the form
-    website = website_entry.get()
+    website = website_entry.get() 
     email = email_entry.get()
     password = password_entry.get()
-
     
 
-    with open('data.txt', 'a') as data_file:
-        data_file.write(f'{website} | {email} | {password}\n')
-        website_entry.delete(0, END)
-        password_entry.delete(0, END)
-        
-    messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} \nPassword: {password} \nIs it ok to save?")
+    if len(website) == 0 or len(password) == 0:
+        messagebox.showinfo(title="Ooops" , message="Please make sure you haven't left any fields empty")
+    else:
+        with open('data.txt', 'a') as data_file:
+            data_file.write(f'{website} | {email} | {password}\n')
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
+            
+        messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} \nPassword: {password} \nIs it ok to save?")
 
        
             
